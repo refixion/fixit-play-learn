@@ -1,0 +1,20 @@
+import { motion, useReducedMotion } from "framer-motion";
+import type { Illustration } from "@/lib/lesson-stories";
+
+export function LessonArt({ kind }: { kind: Illustration }) {
+  const reduced = useReducedMotion();
+  return <div className={`story-art art-${kind}`}><svg viewBox="0 0 320 240" role="img" aria-label={`${kind} illustration`}>
+    <ellipse cx="160" cy="218" rx="75" ry="9" fill="var(--border)" />
+    <motion.g animate={reduced ? {} : { y: [0, -8, 0], rotate: [-2, 2, -2] }} transition={{ duration: 3, repeat: Infinity }} style={{ transformOrigin: "160px 120px" }}>
+      {kind === "driver" ? <g transform="rotate(25 160 120)"><rect x="149" y="111" width="22" height="75" rx="6" fill="var(--muted-foreground)" /><path d="M149 182 L160 202 L171 182" fill="var(--ink)" /><rect x="126" y="27" width="68" height="102" rx="25" fill="var(--info-edge)" /><rect x="126" y="22" width="68" height="96" rx="25" fill="var(--info)" /><path d="M145 43 V92 M161 43 V92 M177 43 V92" stroke="var(--info-foreground)" strokeWidth="6" opacity=".45" /><ellipse cx="160" cy="25" rx="23" ry="7" fill="var(--info-foreground)" opacity=".5" /></g>
+      : kind === "pick" ? <g><path d="M149 32 Q160 14 174 34 L232 141 Q243 166 217 179 L111 179 Q83 167 95 141 Z" fill="var(--warning)" stroke="var(--warning)" strokeWidth="8" /><path d="M112 181 Q160 201 211 181" fill="none" stroke="var(--ink)" strokeWidth="8" opacity=".2" /><path d="M157 55 L120 122" stroke="var(--warning-soft)" strokeWidth="12" strokeLinecap="round" /></g>
+      : kind === "mat" ? <g><rect x="56" y="48" width="208" height="147" rx="15" fill="var(--info-edge)" /><rect x="56" y="40" width="208" height="147" rx="15" fill="var(--info)" /><path d="M125 42 V185 M195 42 V185 M58 89 H262 M58 138 H262" stroke="var(--info-foreground)" opacity=".6" strokeWidth="3" />{[90,160,230].map((x, i) => <g key={x}><circle cx={x} cy={65 + i * 49} r="13" fill="var(--ink)" /><path d={`M${x-6} ${65+i*49} h12 M${x} ${59+i*49} v12`} stroke="var(--background)" strokeWidth="3" /></g>)}</g>
+      : kind === "suction" ? <g><ellipse cx="160" cy="169" rx="77" ry="26" fill="var(--info-edge)" /><ellipse cx="160" cy="158" rx="77" ry="26" fill="var(--info)" /><rect x="146" y="90" width="28" height="70" rx="10" fill="var(--ink)" /><rect x="113" y="49" width="94" height="60" rx="26" fill="none" stroke="var(--warning)" strokeWidth="19" /><path d="M72 111 l-13 -14 M247 111 l13 -14" stroke="var(--primary)" strokeWidth="7" strokeLinecap="round" /></g>
+      : kind === "shield" ? <g><path d="M160 25 L238 55 V110 Q238 170 160 207 Q82 170 82 110 V55 Z" fill="var(--primary-edge)" /><path d="M160 20 L231 48 V104 Q231 161 160 195 Q89 161 89 104 V48 Z" fill="var(--primary)" /><path d="M122 106 L149 133 L197 80" fill="none" stroke="var(--primary-foreground)" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" /></g>
+      : kind === "battery" ? <g><rect x="142" y="27" width="36" height="15" rx="5" fill="var(--ink)" /><rect x="109" y="37" width="102" height="159" rx="15" fill="var(--primary-edge)" /><rect x="109" y="32" width="102" height="155" rx="15" fill="var(--primary)" /><path d="M168 63 L135 119 H159 L150 157 L184 103 H161 Z" fill="var(--primary-foreground)" /><path d="M123 49 V76" stroke="var(--primary-foreground)" opacity=".5" strokeWidth="7" strokeLinecap="round" /></g>
+      : <g><rect x="103" y="20" width="114" height="186" rx="23" fill="var(--ink)" /><rect x="113" y="31" width="94" height="161" rx="14" fill="var(--info)" /><rect x="139" y="31" width="42" height="10" rx="5" fill="var(--ink)" /><rect x="128" y="83" width="46" height="83" rx="6" fill="var(--primary)" /><path d="M155 102 L139 129 H154 L147 150 L166 122 H151 Z" fill="var(--primary-foreground)" /><path d="M184 66 V167 M126 66 H186" stroke="var(--warning)" strokeWidth="7" strokeLinecap="round" /><circle cx="130" cy="51" r="6" fill="var(--background)" /></g>}
+    </motion.g>
+    <path d="M48 62 v15 M41 69 h15 M269 169 v15 M262 176 h15" stroke="var(--warning)" strokeWidth="4" strokeLinecap="round" />
+    <circle cx="265" cy="43" r="5" fill="var(--primary)" />
+  </svg></div>;
+}

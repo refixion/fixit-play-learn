@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, BookOpen, Check, ChevronDown, ChevronRight, Clock3, Crown, Flame, Heart, LockKeyhole, Settings2, ShieldCheck, Sparkles, Star, Target, Trophy, UserRound, Wrench, X, Zap, CircleHelp, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { lessons } from "@/lib/lessons";
 import mascot from "@/assets/revise-bot.png";
+import { useLearner } from "@/lib/learner";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -19,17 +20,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [pro, setPro] = useState(false);
+  const { pro, setPro, completed, hearts, xp, gems, sound, setSound } = useLearner();
   const [selected, setSelected] = useState<number | null>(null);
-  const [started, setStarted] = useState(false);
-  const [completed, setCompleted] = useState(0);
   const [panel, setPanel] = useState<string | null>(null);
-  const [sound, setSound] = useState(true);
   const reduced = useReducedMotion();
   const lesson = selected === null ? null : lessons[selected];
-  const xp = completed * 20;
-  const close = () => { setSelected(null); setStarted(false); setPanel(null); };
-  const openLesson = (index: number) => { setSelected(index); setStarted(false); };
+  const close = () => { setSelected(null); setPanel(null); };
+  const openLesson = (index: number) => { setSelected(index); };
   const nav = [
     { title: "Learn", icon: BookOpen },
     { title: "Practice", icon: Target },
@@ -54,9 +51,9 @@ function Index() {
           <a href="/" className="mobile-wordmark">revise<span className="text-primary">.</span></a>
           <div className="course-label"><span className="course-icon"><Wrench size={17} /></span><span>Phone repair</span><ChevronDown size={16} /></div>
           <div className="status-items">
-            <Button variant="ghost" className="status-item text-warning" aria-label="Streak: 0 days" onClick={() => setPanel("Your streak")}><Flame fill="currentColor" /><span>0</span></Button>
+            <Button variant="ghost" className="status-item text-warning" aria-label={`Streak: ${completed > 0 ? 1 : 0} session day`} onClick={() => setPanel("Your streak")}><Flame fill="currentColor" /><span>{completed > 0 ? 1 : 0}</span></Button>
             <Button variant="ghost" className="status-item text-info" aria-label="120 gears" onClick={() => setPanel("Your gears")}><Settings2 /><span>120</span></Button>
-            <Button variant="ghost" className="status-item text-destructive" aria-label="5 out of 5 hearts" onClick={() => setPanel("Your hearts")}><Heart fill="currentColor" /><span>5</span></Button>
+            <Button variant="ghost" className="status-item text-destructive" aria-label={`${hearts} out of 5 hearts`} onClick={() => setPanel("Your hearts")}><Heart fill="currentColor" /><span>{hearts}</span></Button>
             <Button variant="ghost" role="switch" aria-checked={pro} aria-label="Pro Member" onClick={() => setPro(!pro)} className={`pro-toggle ${pro ? "pro-on" : ""}`}><Crown /><span>PRO MEMBER</span><span className="toggle-track"><span /></span></Button>
           </div>
         </header>
@@ -98,10 +95,10 @@ function Index() {
       <AnimatePresence>{(lesson || panel) && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close}><motion.section role="dialog" aria-modal="true" aria-label={lesson?.title ?? panel ?? "Overview"} className="lesson-modal" initial={{ y: 35, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 35, opacity: 0 }} transition={{ type: "spring", stiffness: 340, damping: 30 }} onClick={event => event.stopPropagation()}><Button variant="ghost" size="icon" className="modal-close" aria-label="Close dialog" onClick={close}><X /></Button>
         {lesson ? <>
           <span className="modal-symbol">{selected !== null && selected > completed ? <LockKeyhole /> : <Wrench />}</span><div className="eyebrow">UNIT 1 · LESSON {(selected ?? 0) + 1}</div><h2>{lesson.title}</h2><p className="modal-description">{lesson.subtitle}</p>
-          {started ? <><div className="lesson-stage"><span>THE BASICS</span><span>1 / 1</span></div><ol className="theory-steps">{lesson.steps.map((step, i) => <li key={step}><span>{i + 1}</span><p>{step}</p></li>)}</ol></> : <div className="lesson-details"><span><Clock3 /> {lesson.minutes} min</span><span><Zap /> +20 XP</span><span><BookOpen /> Foundations</span></div>}
+          <div className="lesson-details"><span><Clock3 /> {lesson.minutes} min</span><span><Zap /> +15 XP</span><span><BookOpen /> Foundations</span></div>
           <div className="tools-list"><h3>YOUR TOOLKIT</h3><div>{lesson.tools.map(tool => <span key={tool}><Wrench size={13} />{tool}</span>)}</div></div>
           <div className="safety-warning"><ShieldCheck /><p>{lesson.warning}</p></div>
-          {selected !== null && selected > completed ? <><p className="locked-message">Complete “{lessons[selected - 1]?.title}” to unlock this lesson.</p><Button variant="chunky" className="modal-action" onClick={() => openLesson(completed)}><ArrowLeft /> BACK TO CURRENT LESSON</Button></> : started ? <Button variant="chunky" className="modal-action" onClick={() => { if (selected === completed) setCompleted(Math.min(completed + 1, lessons.length)); close(); }}>FINISH READING <Check /></Button> : <Button variant="chunky" className="modal-action" onClick={() => setStarted(true)}>{selected !== null && selected < completed ? "REVIEW LESSON" : "START LESSON"}<ArrowRight /></Button>}
+          {selected !== null && selected > completed ? <><p className="locked-message">Complete “{lessons[selected - 1]?.title}” to unlock this lesson.</p><Button variant="chunky" className="modal-action" onClick={() => openLesson(completed)}><ArrowLeft /> BACK TO CURRENT LESSON</Button></> : <Button asChild variant="chunky" className="modal-action"><Link to="/lesson/$id" params={{ id: String((selected ?? 0) + 1) }}>{selected !== null && selected < completed ? "REVIEW LESSON" : "START"}<ArrowRight /></Link></Button>}
         </> : <>
           <span className="modal-symbol">{panel === "Pro workbench" ? <Crown /> : panel === "Your hearts" ? <Heart /> : panel === "Your streak" ? <Flame /> : <Sparkles />}</span><h2>{panel}</h2>
           {panel === "Settings" ? <div className="settings-row"><span>Lesson sounds</span><Button variant="outline" role="switch" aria-checked={sound} aria-label="Lesson sounds" onClick={() => setSound(!sound)}>{sound ? <Volume2 /> : <VolumeX />}{sound ? "On" : "Off"}</Button></div> : <p className="modal-description">{panel === "Pro workbench" ? "The hands-on repair simulator is coming in a future version. Your Pro preview badge is " + (pro ? "on." : "off.") : panel === "Practice" ? "Practice challenges are coming next. Start with your foundation lessons today." : panel === "Leaderboard" ? "The repair community leaderboard is coming soon. Every expert starts with lesson one." : panel === "Profile" ? `Repair rookie · ${completed} lessons read · ${xp} XP this session.` : panel === "Your hearts" ? "5 out of 5 hearts. Your hearts are ready for the practice challenges coming next." : panel === "Your gears" ? "You have 120 starter gears. Gear rewards and spending are coming with practice challenges." : panel === "Your streak" ? "Your streak starts with daily practice. Daily streak tracking is coming in a future version." : panel === "Unit guide" ? "Six bite-sized lessons cover tools, safety, phone components, careful opening, and screw organization. Read them in order to unlock your next step." : "Revise is an educational academy, not a substitute for a verified repair guide. Stop if a battery is swollen or damaged, and seek professional help."}</p>}

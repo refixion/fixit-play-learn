@@ -12,4 +12,5 @@
 ## App architecture
 - Keep the first-version Learn experience on the index route, with lesson content in a separate browser-safe module so the learning path and overview share one source of truth.
 - Use the shared Button component for interactive controls and global semantic tokens for the playful visual system.
-- Keep first-version learner progress in React session state; this version does not claim account-backed persistence.
+- Share learner progress, hearts, rewards, and settings through a root React provider so lesson navigation preserves session state without claiming account-backed persistence.
+- Keep fullscreen lesson journeys on /lesson/$id with browser-safe story and quiz content separate from illustration and audio modules so the path stays independent of lesson presentation.
