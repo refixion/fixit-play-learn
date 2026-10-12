@@ -19,6 +19,15 @@
  */
 
 @theme inline {
+  --font-sans: "Nunito", sans-serif;
+  --color-primary-edge: var(--primary-edge);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-edge: var(--info-edge);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-success-soft: var(--success-soft);
+  --color-ink: var(--ink);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -62,19 +71,27 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.32 0.025 250);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
+  --primary: oklch(0.746 0.234 130.8);
+  --primary-edge: oklch(0.61 0.20 132);
+  --info: oklch(0.66 0.17 242);
+  --info-foreground: oklch(1 0 0);
+  --info-edge: oklch(0.53 0.16 244);
+  --warning: oklch(0.73 0.18 55);
+  --warning-soft: oklch(0.97 0.04 75);
+  --success-soft: oklch(0.97 0.035 135);
+  --ink: oklch(0.28 0.028 250);
   --primary-foreground: oklch(0.984 0.003 247.858);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted: oklch(0.965 0.003 250);
+  --muted-foreground: oklch(0.62 0.014 250);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
