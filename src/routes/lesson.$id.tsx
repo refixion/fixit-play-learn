@@ -85,7 +85,7 @@ function LessonJourney({ index }: { index: number }) {
     if (correct) setBurst(v => v + 1); else { loseHeart(); setShake(v => v + 1); }
   };
   const finish = () => { finishLesson(index); void navigate({ to: "/" }); };
-  return <div className="lesson-screen">
+  return <motion.div className="lesson-screen" animate={shake > 0 && !reduced ? { x: [0, -5, 5, -3, 3, 0] } : { x: 0 }} key={`shake-${shake}`} transition={{ duration: .35 }}>
     <header className="lesson-header">
       <Button variant="ghost" size="icon" aria-label="Quit lesson" onClick={() => setQuit(true)}><X /></Button>
       <div className="lesson-progress" role="progressbar" aria-label="Lesson progress" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100}><motion.div animate={{ width: `${progress}%` }} transition={{ duration: reduced ? 0 : .45 }}><span /></motion.div></div>
@@ -121,7 +121,7 @@ function LessonJourney({ index }: { index: number }) {
     <AnimatePresence>{feedback && question && <motion.aside className={`feedback-drawer feedback-${feedback}`} initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", stiffness: 320, damping: 32 }} aria-live="polite"><div className="feedback-inner"><span className="feedback-icon">{feedback === "correct" ? <Check /> : <X />}</span><div className="feedback-copy"><h2 tabIndex={-1} ref={feedbackRef}>{feedback === "correct" ? "Beautifully done!" : exhausted ? "Time for a fresh start" : "Not quite. You’re learning!"}</h2><p>{question.explanation}</p>{feedback === "wrong" && <strong>Correct answer: {question.options[question.answer]}</strong>}</div><Button variant={feedback === "correct" ? "chunky" : "destructive"} className="lesson-continue" onClick={() => { if (feedback === "correct") next(); else if (exhausted) { refillHearts(); setStep(0); setChoice(null); setFeedback(null); playLessonSound("click", sound); } else { setChoice(null); setFeedback(null); playLessonSound("click", sound); } }}>{feedback === "correct" ? "CONTINUE" : exhausted ? "RESTART LESSON" : "TRY AGAIN"}<ArrowRight /></Button></div></motion.aside>}</AnimatePresence>
     {exhausted && !feedback && !finished && <div className="modal-backdrop"><section role="dialog" aria-modal="true" aria-label="No hearts remaining" className="lesson-modal"><Heart className="text-destructive" size={44} /><h2>A fresh start?</h2><p className="modal-description">Restart this lesson with five practice hearts.</p><Button variant="chunky" className="modal-action" onClick={() => { refillHearts(); setStep(0); }}>RESTART LESSON</Button><Button asChild variant="outline" className="modal-action"><Link to="/">BACK TO LEARNING</Link></Button></section></div>}
     <dialog ref={quitRef} className="quit-dialog" onCancel={event => { event.preventDefault(); setQuit(false); }} onClose={() => setQuit(false)}><span className="quit-heart"><Heart fill="currentColor" /></span><h2>Are you sure you want to quit?</h2><p>{finished ? "Finish now to collect your lesson rewards." : "Your progress in this lesson will be lost. Your learning path will stay right here."}</p><Button variant="chunky" className="modal-action" onClick={() => setQuit(false)} autoFocus>KEEP LEARNING</Button><Button asChild variant="outline" className="modal-action"><Link to="/">QUIT LESSON</Link></Button></dialog>
-  </div>;
+  </motion.div>;
 }
 
 function WrenchBadge() { return <Zap size={14} fill="currentColor" />; }
