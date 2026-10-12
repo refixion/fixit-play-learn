@@ -70,14 +70,14 @@ function Index() {
               {lessons.map((item, index) => {
                 const done = index < completed;
                 const active = index === completed;
-                const position = [0, -63, -95, -35, 38, 0][index];
+                const position = [0, -63, -95, -35, 38, 0][index] ?? 0;
                 return <div key={item.title} className={`path-row path-position-${position < 0 ? `minus${Math.abs(position)}` : position}`}>
-                  {active && <motion.div className="start-callout" animate={reduced ? undefined : { y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 2 }}>LET’S GO!</motion.div>}
+                  {active && <motion.div className="start-callout" animate={reduced ? {} : { y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 2 }}>LET’S GO!</motion.div>}
                   <div className={active ? "active-ring" : "node-wrap"}><Button variant="ghost" className={`lesson-node ${done ? "node-done" : active ? "node-active" : "node-locked"}`} aria-label={`${item.title}${done ? ", completed" : active ? ", current lesson" : ", locked"}`} onClick={() => openLesson(index)}>{done ? <Check /> : active ? <Star fill="currentColor" /> : index === 5 ? <Trophy /> : <LockKeyhole />}</Button></div>
                   <span className={`node-label ${active ? "current-label" : ""}`}>{item.title}</span>
                 </div>;
               })}
-              <div className="mascot-scene"><motion.img src={mascot} alt="Chip, your friendly phone repair companion, holding a screwdriver" width={1024} height={1024} animate={reduced ? undefined : { y: [0, -6, 0], rotate: [0, 1, 0] }} transition={{ duration: 4, repeat: Infinity }} /><div className="mascot-message">Every expert started<br />with the basics.<span>You’re in the right place!</span></div></div>
+              <div className="mascot-scene"><motion.img src={mascot} alt="Chip, your friendly phone repair companion, holding a screwdriver" width={1024} height={1024} animate={reduced ? {} : { y: [0, -6, 0], rotate: [0, 1, 0] }} transition={{ duration: 4, repeat: Infinity }} /><div className="mascot-message">Every expert started<br />with the basics.<span>You’re in the right place!</span></div></div>
               <div className="path-finish"><span /><ShieldCheck /><span /></div>
             </section>
             <section className="next-unit"><div className="next-unit-lock"><LockKeyhole /></div><div><span>UNIT 2</span><h3>Under the screen</h3><p>A little deeper. A lot more possibilities.</p></div></section>
